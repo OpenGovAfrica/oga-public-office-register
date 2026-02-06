@@ -1,0 +1,45 @@
+name: CI Pipeline
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgis/postgis:15-3.3
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          
+      - name: Install System Deps (GDAL)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gdal-bin libgdal-dev
+
+      - name: Install Python Deps
+        run: |
+          pip install ruff black pytest pytest-django
+          pip install -r backend/requirements.txt
+
+      - name: Lint
+        run: |
+          ruff check .
+          black --check .
+
+      - name: Test
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: test_db
+          DJANGO_SETTINGS_MODULE: config.settings
+        run: pytest

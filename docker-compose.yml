@@ -1,0 +1,29 @@
+services:
+  web:
+    build: ./backend  
+    command: python /app/backend/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app/backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    env_file: .env
+    environment:
+      - PYTHONPATH=/app/backend
+
+  db:
+    image: postgis/postgis:15-3.3
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-oga_register}
+
+  redis:
+    image: redis:7-alpine
+
+volumes:
+  postgres_data:
