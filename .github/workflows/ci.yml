@@ -37,6 +37,7 @@ jobs:
           black --check .
 
       - name: Test
+        working-directory: ./backend
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PASSWORD: password
