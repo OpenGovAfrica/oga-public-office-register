@@ -49,7 +49,7 @@ Each Pull Request should focus on **one coherent change**.
 ### Contribution Workflow
 
 1. **Find or open an issue**
-   - Start with existing issues on this repo or find all roadmap issues here: [Project 1: Citizens-in-Office Tracker - #19 where possible](https://github.com/OpenGovAfrica/gsoc/issues/19). All work must be done in this repository. 
+   - Start with existing issues on this repo or find the [roadmap doc here:]([https://github.com/OpenGovAfrica/gsoc/issues/19](https://github.com/OpenGovAfrica/oga-public-office-register/blob/main/ROADMAP.md)). All work must be done in this repository. 
    - If proposing a new change, open an issue describing:
      - the problem being solved
      - the proposed approach
