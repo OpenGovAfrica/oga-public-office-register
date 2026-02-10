@@ -77,6 +77,73 @@ Each Pull Request should focus on **one coherent change**.
      - why it was necessary
      - any limitations or open questions
 
+---
+
+### Contributors & Roles
+
+This project follows an individual-ownership, collaborative-development model across all phases of work and maintains explicit attribution for all contributors. Contributors are encouraged to collaborate through discussion, reviews, and coordination at every stage of the project. However, all implemented work must have clearly attributable ownership.
+
+Each contributor is credited with the specific components, tasks, or deliverables they owned or led. Participation, discussion, or review alone does not imply ownership.
+
+| Contributor | Role / Focus Area | Owned Deliverables |
+|------------|------------------|--------------------|
+| Name / GitHub | Backend, Frontend, Data, Infra, Research | Clearly scoped features, services, or setup tasks |
+
+This table must be kept up to date as the project evolves, from Phase 0 through final delivery. Phase-level credit is insufficient on its own; ownership must always be traceable to concrete deliverables, from initial scaffolding (Phase 0) through final handover.
+
+**Clarification on Collaboration and Ownership (All Phases)**
+
+From Phase 0 through the final phase, contributors may not jointly claim the same implementation output unless responsibilities are explicitly separated and documented. Collaboration should strengthen implementation quality, not dilute accountability.
+
+---
+
+### Definition of Done
+
+A task or feature is considered complete only when all of the following are satisfied:
+
+1. Code is clean, readable, and compliant with project linting and formatting rules.
+2. Appropriate unit and/or integration tests are included and CI passes.
+3. Relevant documentation is updated (README, ARCHITECTURE, API docs where applicable).
+4. Database migrations are provided and reviewed if schema changes are involved.
+5. The Pull Request has received at least one peer review and maintainer approval.
+
+---
+
+### Relationship to Tech Programs, Hackathons & Internships
+
+This project may be developed in part through tech programs. If you are contributing through GSoC, MLH, Outreachy etc, please find your [project standard here](https://github.com/OpenGovAfrica/gsoc/blob/main/docs/project-standard.md) & roadmap [here](https://github.com/OpenGovAfrica/gsoc/issues/20). 
+_If this becomes obselete please raise an issue for_
+
+Contributors are expected to:
+- Build reusable, well-documented components
+- Respect long-term maintenance needs
+- Treat programs as an entry point, not a finish line
+
+The roadmap and contribution guidelines are designed for continuity beyond any single program.
+
+### GSoC Compatibility Note
+
+GSoC compatibility: Contributors may collaborate through discussion and peer review, but all submitted work must have clear individual ownership and be attributable to a single contributor for evaluation.
+
+---
+
+### Maintainer Enforcement Guidelines
+
+These guidelines apply from Phase 0 through final project delivery.
+
+Maintainers are responsible for ensuring clear ownership and accountability throughout the project lifecycle. When reviewing work, maintainers should verify that:
+
+1. Every pull request has a clearly identifiable primary owner.
+2. Each deliverable, regardless of phase, is attributable to a specific contributor.
+3. The README “Contributors & Roles” section reflects actual implementation ownership, not participation alone.
+4. Multiple contributors are not credited for the same deliverable unless roles and responsibilities are explicitly differentiated.
+5. Collaboration is demonstrated through reviews, discussions, and coordination — not shared ownership of identical outputs.
+
+If ownership is unclear at any stage, maintainers should request clarification or restructuring before merging.
+Clear ownership is required for all phases to ensure sustainability, accountability, and long-term project health.
+
+---
+
 ### Coding Standards
 
 All code contributions must adhere to project-wide standards.
