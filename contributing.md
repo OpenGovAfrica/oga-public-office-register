@@ -86,8 +86,8 @@ This project follows an individual-ownership, collaborative-development model ac
 Each contributor is credited with the specific components, tasks, or deliverables they owned or led. Participation, discussion, or review alone does not imply ownership.
 
 | Contributor | Role / Focus Area | Owned Deliverables |
-|------------|------------------|--------------------|
-| Name / GitHub | Backend, Frontend, Data, Infra, Research | Clearly scoped features, services, or setup tasks |
+|:-----------|:------------------|:-------------------|
+| **@Raziel206** | Infrastructure, Backend & DevOps | **Phase 0 Scaffold:** Docker/PostGIS environment setup, CI/CD Pipeline configuration (Linting/Tests), Core Architecture & Data Model documentation, Django Project initialization. |
 
 This table must be kept up to date as the project evolves, from Phase 0 through final delivery. Phase-level credit is insufficient on its own; ownership must always be traceable to concrete deliverables, from initial scaffolding (Phase 0) through final handover.
 
