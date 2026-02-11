@@ -40,7 +40,8 @@ class Organization(TimeStampedUUIDModel):
         blank=True,
         related_name="children",
         help_text=_(
-            "The organization that contains this one (e.g., a committee within a parliament)."
+            "The organization that contains this one"
+            "(e.g., a committee within a parliament)."
         ),
     )
     # We will refine this field in Phase 1.2 with a proper GeographicArea model,
