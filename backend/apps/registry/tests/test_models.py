@@ -1,6 +1,14 @@
 from django.test import TestCase
-from apps.registry.models import Person, Organization, Post, Membership
-from apps.registry.models import OrganizationType, PostType, SelectionMethod
+
+from apps.registry.models import (
+    Membership,
+    Organization,
+    OrganizationType,
+    Person,
+    Post,
+    PostType,
+    SelectionMethod,
+)
 
 
 class RegistryModelTests(TestCase):

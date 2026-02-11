@@ -1,8 +1,10 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from apps.core.models import TimeStampedUUIDModel
-from .person import Person
+
 from .organization import Organization
+from .person import Person
 from .post import Post
 
 
@@ -17,7 +19,7 @@ class SelectionMethod(models.TextChoices):
 class Membership(TimeStampedUUIDModel):
     """
     Represents the relationship between a Person and an Organization/Post.
-    This is the core 'tenure' record (e.g., 'Person A was MP for District B from 2015-2019').
+    This is the core 'tenure' record.
     """
 
     person = models.ForeignKey(

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Person, Organization, Post, Membership
+
+from .models import Membership, Organization, Person, Post
 
 
 @admin.register(Person)

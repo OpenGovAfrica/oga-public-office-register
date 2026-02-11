@@ -1,7 +1,7 @@
-from .person import Person
-from .organization import Organization, OrganizationType
-from .post import Post, PostType
 from .membership import Membership, SelectionMethod
+from .organization import Organization, OrganizationType
+from .person import Person
+from .post import Post, PostType
 
 __all__ = [
     "Person",
