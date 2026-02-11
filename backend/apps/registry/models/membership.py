@@ -31,7 +31,7 @@ class Membership(TimeStampedUUIDModel):
         verbose_name=_("Organization"),
         on_delete=models.CASCADE,
         related_name="memberships",
-        help_text=_("The organization the person belongs to (e.g., The Parliament)."),
+        help_text=_("The organization the person belongs" "to (e.g., The Parliament)."),
     )
     post = models.ForeignKey(
         Post,
@@ -41,7 +41,8 @@ class Membership(TimeStampedUUIDModel):
         blank=True,
         related_name="memberships",
         help_text=_(
-            "The specific post held (e.g., 'MP for Lagos West'). Optional if generic membership."
+            "The specific post held (e.g., 'MP for Lagos West')."
+            "Optional if generic membership."
         ),
     )
     party = models.ForeignKey(
@@ -52,7 +53,8 @@ class Membership(TimeStampedUUIDModel):
         blank=True,
         related_name="party_memberships",
         help_text=_(
-            "The political party the person belonged to during this specific membership."
+            "The political party the person belonged "
+            "to during this specific membership."
         ),
     )
     start_date = models.DateField(
@@ -73,7 +75,7 @@ class Membership(TimeStampedUUIDModel):
         choices=SelectionMethod.choices,
         default=SelectionMethod.UNKNOWN,
         help_text=_(
-            "How the person obtained this position (e.g., elected vs appointed)."
+            "How the person obtained this position" "(e.g., elected vs appointed)."
         ),
     )
 
