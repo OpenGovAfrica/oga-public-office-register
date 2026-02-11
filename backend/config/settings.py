@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.gis",  # Required for PostGIS
     "rest_framework",
+    "apps.core",
     "apps.registry",
 ]
 

@@ -1,7 +1,10 @@
 services:
   web:
     build: ./backend  
-    command: python /app/backend/manage.py runserver 0.0.0.0:8000
+    # UPDATED COMMAND: Migrates first, then starts server
+    command: >
+      sh -c "python /app/backend/manage.py migrate &&
+             python /app/backend/manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend:/app/backend
     ports:

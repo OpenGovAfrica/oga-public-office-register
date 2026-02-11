@@ -50,4 +50,26 @@ The database schema revolves around four core models.
 * **Usage:** Storing constituency boundaries (Polygons) and office locations (Points).
 * **Standard:** SRID 4326 (WGS 84) is used for storage to ensure compatibility with standard GPS and mapping tools (Leaflet/Mapbox).
 
----
+## Naming & Titles (Design Decisions)
+
+### 1. Handling Honorifics and Titles
+* **Decision:** We do not provide a separate field for "Prefix" or "Suffix." 
+* **Implementation:** Honorifics (e.g., Chief, Emir, Oba, Alhaji, Rev, Dr.) should be included in the `name` field if they are part of the public's primary recognition of the official.
+* **Reasoning:** Titles in African governance are highly varied and culturally specific. Attempting to create an Enum for titles would be restrictive. If a specific title is required for a project (like "Chief" for traditional roles), it should be handled via the `Post` label (e.g., "Post Label: Paramount Chief").
+
+### 2. Multi-Country Support (ISO-3166)
+* **Decision:** Use ISO-3166-1 alpha-3 (3-letter codes) for all country identifiers.
+* **Reasoning:** 3-letter codes (e.g., `ZAF`, `KEN`, `NGA`) are more readable than 2-letter codes and are the standard for international data exchange. This ensures the registry can scale to all 54+ African nations without ambiguity.
+
+### 3. Language and Historical Variants
+* **Decision:** Store the primary name in English (or the country's official administrative language) but allow for "alternative names" in Phase 1.2.
+* **Reasoning:** To support searchability across colonial vs. post-colonial spellings and local-language variants, the data model must eventually support an `OtherNames` table (Popolo standard) linked to the `Person`.
+
+### 4. Selection Methods (Enums)
+* **Decision:** Use a strictly controlled vocabulary for how an official enters a role.
+* **Implementation:** * `elected`: For parliamentary or executive roles chosen by vote.
+    * `appointed`: For ministerial or judicial roles.
+    * `hereditary`: Specifically for traditional authorities (Emirs, Kings, etc.).
+    * `ex_officio`: For roles held automatically by virtue of holding another office.
+
+---    
