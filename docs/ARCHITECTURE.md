@@ -34,7 +34,9 @@ graph TD
 
 * **`backend/`**: The Django source code.
     * **`config/`**: Project-wide settings (URL routing, WSGI).
-    * **`apps/`**: Modular Django applications (e.g., `registry`, `core`).
+    * **`apps/`**: Modular Django applications.
+        * **`core/`**: Shared abstract models (UUIDs, timestamps, soft-delete).
+        * **`registry/`**: Popolo-compliant models (Person, Org, Post, Membership).
     * **`Dockerfile`**: Defines the Python/GDAL runtime environment.
 * **`frontend/`**: The React application root (Currently a placeholder for Phase 5).
 * **`.github/`**: CI/CD workflows.
@@ -44,11 +46,9 @@ graph TD
 
 ## CI/CD Pipeline
 
-We use GitHub Actions to enforce code quality on every Pull Request:
-
 1.  **Linting**: `ruff` checks for code quality and bugs.
 2.  **Formatting**: `black` ensures style consistency.
-3.  **Testing**: `pytest` runs unit and integration tests against a temporary PostGIS service.
+3.  **Testing**: Native Django `test` suite runs against a temporary PostGIS service.
 4.  **Build Check**: Verifies that the Docker images build successfully to prevent deployment failures.    
 
 ---

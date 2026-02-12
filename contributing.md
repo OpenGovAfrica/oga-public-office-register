@@ -87,7 +87,7 @@ Each contributor is credited with the specific components, tasks, or deliverable
 
 | Contributor | Role / Focus Area | Owned Deliverables |
 |:-----------|:------------------|:-------------------|
-| **@Raziel206** | Infrastructure, Backend & DevOps | **Phase 0 Scaffold:** Docker/PostGIS environment setup, CI/CD Pipeline configuration (Linting/Tests), Core Architecture & Data Model documentation, Django Project initialization. |
+| **@Raziel206** | Infrastructure, Backend & DevOps | **Phase 0 Scaffold:** Docker/PostGIS environment setup, CI/CD Pipeline configuration, Core Architecture & Data Model documentation, Django Project initialization.<br>**Phase 1.1 Data Modeling:** Implemented core Popolo models (`Person`, `Organization`, `Post`, `Membership`), Abstract Base Classes, and Enums. |
 
 This table must be kept up to date as the project evolves, from Phase 0 through final delivery. Phase-level credit is insufficient on its own; ownership must always be traceable to concrete deliverables, from initial scaffolding (Phase 0) through final handover.
 
