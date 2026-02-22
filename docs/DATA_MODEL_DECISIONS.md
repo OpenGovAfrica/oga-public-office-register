@@ -1,75 +1,54 @@
 # Data Model Decisions
 
 ## Core Philosophy: The Popolo Standard
-We are adopting the [Popolo Data Standard](https://www.popoloproject.com/) for this registry. Popolo is an international open data specification for monitoring legislatures and governments.
+We are adopting the [Popolo Data Standard](https://www.popoloproject.com/) for this registry to ensure international interoperability and completeness. Popolo is specifically designed for the "messy" reality of political data, allowing us to track complex relationships across 54+ African nations.
 
-**Why Popolo?**
-1.  **Interoperability:** Allows data to be easily shared with other civic tech tools.
-2.  **Completeness:** Covers complex edge cases (e.g., generic posts, changing district boundaries) that custom models often miss.
-3.  **Flexibility:** Designed specifically for the messy reality of political data.
-
-## Primary Entities (Phase 1)
-
-The database schema revolves around four core models.
+## Primary Entities
 
 ### 1. Person
-* **Concept:** A real human being.
-* **Key Fields:** Name, Biography, Birth Date, Gender, Image URL.
-* **Design Decision:** Names are stored as a single string (Popolo standard) rather than split into First/Last to accommodate diverse cultural naming conventions.
+* **Decision:** Names are stored as a single string to accommodate diverse cultural naming conventions.
+* **Logic:** We do not enforce "First Name / Last Name" splits, as this does not reflect the naming realities in many African regions.
 
-### 2. Organization
-* **Concept:** A group with a common purpose (e.g., "Ministry of Finance", "Parliament", "Liberal Party").
-* **Key Fields:** Name, Classification (Ministry, Committee, Party), Parent Organization.
-* **Logic:** Organizations are hierarchical. A "Committee" can belong to the "Parliament".
+### 2. Organization & Chambers
+* **Concept:** Hierarchical groups with common purposes (e.g., "National Assembly", "Political Party").
+* **Refinement (Phase 1.3):** Organizations now support **Bicameral** systems. A "Parliament" (Parent) can contain a "Senate" (Upper Chamber) and a "National Assembly" (Lower Chamber).
+* **Enforcement:** The `chamber_type` field prevents ambiguity between different legislative houses within a single country.
 
-### 3. Post
-* **Concept:** A position that exists independently of the person holding it.
-* **Example:** "The Minister of Finance" is the **Post**. "Ngozi Okonjo-Iweala" is the **Person**.
-* **Why separate from Membership?** This allows us to track **vacancies**. If a Minister resigns, the *Post* remains in the database, but the current *Membership* ends.
 
-### 4. Membership
-* **Concept:** The connecting link between a **Person**, an **Organization**, and optionally a **Post**.
-* **Key Fields:** Start Date, End Date, Role.
-* **Logic:** `Person A` has a `Membership` in `Organization B` holding `Post C` from `Date X` to `Date Y`.
+
+### 3. GeographicArea (Phase 1.2)
+* **Decision:** Administrative regions are **normalized**, not free-text.
+* **Hierarchy:** Supports recursive parenting, allowing the system to traverse from a `Constituency` up to a `State/Province` and finally to a `Country`.
+* **Spatial Support:** Includes a PostGIS `GeometryField` for storing constituency boundaries (Polygons) or office locations (Points) to enable future map visualizations.
+
+### 4. Post
+* **Concept:** A position existing independently of the person holding it (e.g., "The Speaker").
+* **Geographic Link:** Every `Post` is linked to a specific `GeographicArea`, ensuring we can track exactly which region an official represents.
 
 ## Technical Implementation Details
 
 ### UUIDs vs Integers
 * **Decision:** Use **UUIDs** (Universally Unique Identifiers) for all Primary Keys.
-* **Reasoning:**
-    * Prevents enumeration attacks (users guessing IDs like `/person/1`, `/person/2`).
-    * Allows for easier data merging from distributed sources later without ID collisions.
+* **Reasoning:** This prevents enumeration attacks and allows for seamless data merging from distributed sources without ID collisions.
 
 ### Soft Deletion
-* **Decision:** No record is ever truly deleted from the database via the API.
-* **Implementation:** All models inherit from a `SoftDeleteModel` abstract class containing an `is_active` boolean.
-* **Reasoning:** Maintaining a historical audit trail is critical for government accountability data. We need to know who *was* in office, even if they aren't anymore.
+* **Implementation:** Models inherit from `SoftDeleteModel` with an `is_active` boolean.
+* **Reasoning:** Maintaining a historical audit trail is critical; we must preserve records of former officials for accountability.
 
-### Geospatial Data
-* **Tool:** PostGIS
-* **Usage:** Storing constituency boundaries (Polygons) and office locations (Points).
-* **Standard:** SRID 4326 (WGS 84) is used for storage to ensure compatibility with standard GPS and mapping tools (Leaflet/Mapbox).
+### Multi-Country Support (ISO-3166)
+* **Decision:** Use ISO-3166-1 alpha-3 (3-letter codes) for all country identifiers (e.g., `NGA`, `ZAF`, `KEN`).
+* **Reasoning:** These are more readable and the standard for international data exchange.
 
 ## Naming & Titles (Design Decisions)
 
 ### 1. Handling Honorifics and Titles
-* **Decision:** We do not provide a separate field for "Prefix" or "Suffix." 
-* **Implementation:** Honorifics (e.g., Chief, Emir, Oba, Alhaji, Rev, Dr.) should be included in the `name` field if they are part of the public's primary recognition of the official.
-* **Reasoning:** Titles in African governance are highly varied and culturally specific. Attempting to create an Enum for titles would be restrictive. If a specific title is required for a project (like "Chief" for traditional roles), it should be handled via the `Post` label (e.g., "Post Label: Paramount Chief").
+* **Decision:** Honorifics (e.g., Chief, Emir, Oba, Alhaji, Dr.) are included directly in the `name` field.
+* **Reasoning:** African titles are highly varied; restrictive Enums would fail to capture local specificities.
 
-### 2. Multi-Country Support (ISO-3166)
-* **Decision:** Use ISO-3166-1 alpha-3 (3-letter codes) for all country identifiers.
-* **Reasoning:** 3-letter codes (e.g., `ZAF`, `KEN`, `NGA`) are more readable than 2-letter codes and are the standard for international data exchange. This ensures the registry can scale to all 54+ African nations without ambiguity.
+### 2. Geographic Normalization (Phase 1.2)
+* **Decision:** Mandatory mapping to a `GeographicArea` instance instead of free-text strings.
+* **Reasoning:** This prevents data fragmentation (e.g., "Lagos" vs "Lagos State") and enables accurate regional filtering and comparison.
 
-### 3. Language and Historical Variants
-* **Decision:** Store the primary name in English (or the country's official administrative language) but allow for "alternative names" in Phase 1.2.
-* **Reasoning:** To support searchability across colonial vs. post-colonial spellings and local-language variants, the data model must eventually support an `OtherNames` table (Popolo standard) linked to the `Person`.
-
-### 4. Selection Methods (Enums)
+### 3. Selection Methods (Enums)
 * **Decision:** Use a strictly controlled vocabulary for how an official enters a role.
-* **Implementation:** * `elected`: For parliamentary or executive roles chosen by vote.
-    * `appointed`: For ministerial or judicial roles.
-    * `hereditary`: Specifically for traditional authorities (Emirs, Kings, etc.).
-    * `ex_officio`: For roles held automatically by virtue of holding another office.
-
----    
+* **Categories:** `elected`, `appointed`, `hereditary`, and `ex_officio`.

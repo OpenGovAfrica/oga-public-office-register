@@ -21,26 +21,31 @@ jobs:
         with:
           python-version: "3.10"
           
-      - name: Install System Deps (GDAL)
+      - name: Install System Deps (GDAL/PostGIS)
         run: |
           sudo apt-get update
-          sudo apt-get install -y gdal-bin libgdal-dev
+          sudo apt-get install -y gdal-bin libgdal-dev binutils libproj-dev
 
       - name: Install Python Deps
         run: |
           pip install ruff black pytest pytest-django
           pip install -r backend/requirements.txt
 
-      - name: Lint
+      - name: Lint & Import Sort Check
+        env:
+          PYTHONPATH: ./backend
         run: |
-          ruff check .
+          # The 'I' flag ensures manual import sorting rules are followed
+          ruff check . --select E,F,I 
           black --check .
 
       - name: Test
         working-directory: ./backend
         env:
+          PYTHONPATH: .
           POSTGRES_HOST: localhost
           POSTGRES_PASSWORD: password
           POSTGRES_DB: test_db
+          DATABASE_URL: postgres://postgres:password@localhost:5432/test_db
           DJANGO_SETTINGS_MODULE: config.settings
         run: pytest

@@ -5,16 +5,29 @@ target-version = ['py310']
 [tool.ruff]
 line-length = 88
 target-version = "py310"
+# Specify the root directory for imports to help Ruff's 'I' (isort) rules
+src = ["backend"]
 
 [tool.ruff.lint]
-# This moves 'select' to the correct section to stop the deprecation warning
+# E: pycodestyle, F: Pyflakes, I: isort
 select = ["E", "F", "I"]
+# Allow unused imports in __init__.py files
+ignore = ["F401"]
+
+
 
 [tool.ruff.lint.per-file-ignores]
-# Ignore line length (E501) in migrations because they are auto-generated
-"**/migrations/*" = ["E501"]
+# Ignore line length (E501) and unused imports in migrations
+"**/migrations/*" = ["E501", "F401"]
+
+[tool.ruff.lint.isort]
+# Ensure our internal apps are recognized as first-party for sorting
+known-first-party = ["apps", "config"]
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
-python_files = ["tests.py", "test_*.py"]
-addopts = "--nomigrations"
+# Ensure pytest looks for all three of your test file patterns
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+# Add backend to pythonpath so imports like 'apps.core' work seamlessly
+pythonpath = ["backend"]
+addopts = "--nomigrations --reuse-db"

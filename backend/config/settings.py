@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "apps.core",
     "apps.registry",
+    "apps.geo",
 ]
 
 MIDDLEWARE = [

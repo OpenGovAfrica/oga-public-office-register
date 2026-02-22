@@ -14,6 +14,15 @@ class OrganizationType(models.TextChoices):
     UNKNOWN = "unknown", _("Unknown")
 
 
+class ChamberType(models.TextChoices):
+    """Specific to legislatures to distinguish bicameral systems."""
+
+    UNICAMERAL = "unicameral", _("Unicameral")
+    LOWER = "lower_chamber", _("Lower Chamber")
+    UPPER = "upper_chamber", _("Upper Chamber")
+    NONE = "none", _("Non-Legislative")
+
+
 class Organization(TimeStampedUUIDModel):
     """
     Represents a group of people with a common purpose,
@@ -32,6 +41,13 @@ class Organization(TimeStampedUUIDModel):
         default=OrganizationType.UNKNOWN,
         help_text=_("The category of the organization (e.g., Legislature, Party)."),
     )
+    chamber_type = models.CharField(
+        verbose_name=_("Chamber Type"),
+        max_length=20,
+        choices=ChamberType.choices,
+        default=ChamberType.NONE,
+        help_text=_("If this is a legislature, specify the type of chamber."),
+    )
     parent = models.ForeignKey(
         "self",
         verbose_name=_("Parent Organization"),
@@ -40,12 +56,10 @@ class Organization(TimeStampedUUIDModel):
         blank=True,
         related_name="children",
         help_text=_(
-            "The organization that contains this one"
+            "The organization that contains this one "
             "(e.g., a committee within a parliament)."
         ),
     )
-    # We will refine this field in Phase 1.2 with a proper GeographicArea model,
-    # but for now, we stick to the basic ISO code as a placeholder.
     country_code = models.CharField(
         verbose_name=_("Country Code"),
         max_length=3,
@@ -55,7 +69,7 @@ class Organization(TimeStampedUUIDModel):
     class Meta:
         verbose_name = _("Organization")
         verbose_name_plural = _("Organizations")
-        ordering = ["name"]
+        ordering = ["country_code", "name"]  # Group by country first
 
     def __str__(self):
-        return f"{self.name} ({self.get_classification_display()})"
+        return f"{self.name} ({self.country_code})"

@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.core.models import TimeStampedUUIDModel
+from apps.geo.models import GeographicArea
 
 from .organization import Organization
 
@@ -40,8 +41,17 @@ class Post(TimeStampedUUIDModel):
         related_name="posts",
         help_text=_("The body where this post exists (e.g., The Senate)."),
     )
-    # Note: In Phase 1.2, we will add a ForeignKey to GeographicArea here.
-    # For now, the 'label' usually contains the geographic context.
+    area = models.ForeignKey(
+        GeographicArea,
+        verbose_name=_("Geographic Area"),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="posts",
+        help_text=_(
+            "The geographic area this post represents (e.g., a specific constituency)."
+        ),
+    )
 
     class Meta:
         verbose_name = _("Post")
